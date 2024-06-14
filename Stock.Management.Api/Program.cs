@@ -10,6 +10,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSwaggerConfig();
+builder.Configuration.AddJsonFile($"appsettings.json", false, false);
+builder.Services.AddSingleton(builder.Configuration);
 
 builder.Services.ResolveDependecies(builder.Configuration);
 

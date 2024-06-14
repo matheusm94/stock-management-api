@@ -11,12 +11,12 @@ namespace Stock.Management.Api.Extensions
     {
         internal static IServiceCollection ResolveDependecies(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContextFactory<DbStockContext>(options =>
+            services.AddDbContext<DbStockContext>(options =>
                 options.UseNpgsql(configuration.GetConnectionString("StockDb")));
 
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductService, ProductService>();
-           // services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;
         }

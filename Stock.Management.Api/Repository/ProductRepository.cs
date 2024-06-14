@@ -50,17 +50,18 @@ public class ProductRepository(DbStockContext context) : IProductRepository
         await _context.SaveChangesAsync();
     }
 
-    public void UpdateProduct(ProductGetModel productModel)
+    public void UpdateProduct(Product product)
     {
-        var product = GetProductAsync(productModel.Productid).Result;
+        //var product = GetProductAsync(productModel.Productid).Result; 
 
-        product.Name = productModel.Name;
-        product.Maturitydate = productModel.Maturitydate;
-        product.Price = productModel.Price;
-
+        //product.Name = productModel.Name;
+        //product.Maturitydate = productModel.Maturitydate;
+        //product.Price = productModel.Price;
+        //
+        _context.Entry(product).State = EntityState.Modified;
         _context.SaveChanges();
     }
 
-    private async Task<Product> GetProductAsync(int id) => await _context.Products
+    public async Task<Product> GetProductAsync(int id) => await _context.Products
         .Where(p => p.Productid == id).FirstOrDefaultAsync().ConfigureAwait(false);
 }

@@ -1,13 +1,15 @@
-﻿using Stock.Management.Api.Models;
+﻿using Stock.Management.Api.Database;
+using Stock.Management.Api.Models;
 using Stock.Management.Api.Repository.Interfaces;
 using Stock.Management.Api.Service.Interfaces;
 using Stock.Management.Api.Utils;
 
 namespace Stock.Management.Api.Service;
 
-public class ProductService(IProductRepository productRepository) : IProductService
+public class ProductService(IProductRepository productRepository, IUnitOfWork unitOfWork) : IProductService
 {
     private readonly IProductRepository _productRepository = productRepository;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
     public async Task<ServiceResult<IEnumerable<ProductGetModel>>> GetProductsAsync()
     {
@@ -54,12 +56,18 @@ public class ProductService(IProductRepository productRepository) : IProductServ
         if (productModel.Price == 0)
             return result.SetError("Preço não pode ser 0");
 
-        var product = await _productRepository.GetProductByIdAsync(productModel.Productid);
+        var product = await _productRepository.GetProductAsync(productModel.Productid);
 
-        if(product == null)
+        if (product == null)
             return result.SetError("O produto nao existe");
 
-        _productRepository.UpdateProduct(productModel);
+        product.Name = productModel.Name;
+        product.Price = productModel.Price;
+        product.Maturitydate = productModel.Maturitydate;
+
+        _productRepository.UpdateProduct(product);
+
+        await _unitOfWork.CommitAsync();
 
         result.SetSuccess();
 

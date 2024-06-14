@@ -3,8 +3,12 @@ using Stock.Management.Api.Database.Entities;
 
 namespace Stock.Management.Api.Database
 {
-    public partial class DbStockContext(DbContextOptions<DbStockContext> options) : DbContext(options)
+    public partial class DbStockContext : DbContext
     {
+
+        public DbStockContext(DbContextOptions<DbStockContext> options) : base(options)
+        {
+        }
         public virtual DbSet<Admin> Admins { get; set; }
 
         public virtual DbSet<Customer> Customers { get; set; }
@@ -17,21 +21,21 @@ namespace Stock.Management.Api.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder
-                .HasPostgresEnum("auth", "aal_level", new[] { "aal1", "aal2", "aal3" })
-                .HasPostgresEnum("auth", "code_challenge_method", new[] { "s256", "plain" })
-                .HasPostgresEnum("auth", "factor_status", new[] { "unverified", "verified" })
-                .HasPostgresEnum("auth", "factor_type", new[] { "totp", "webauthn" })
-                .HasPostgresEnum("auth", "one_time_token_type", new[] { "confirmation_token", "reauthentication_token", "recovery_token", "email_change_token_new", "email_change_token_current", "phone_change_token" })
-                .HasPostgresEnum("pgsodium", "key_status", new[] { "default", "valid", "invalid", "expired" })
-                .HasPostgresEnum("pgsodium", "key_type", new[] { "aead-ietf", "aead-det", "hmacsha512", "hmacsha256", "auth", "shorthash", "generichash", "kdf", "secretbox", "secretstream", "stream_xchacha20" })
-                .HasPostgresExtension("extensions", "pg_stat_statements")
-                .HasPostgresExtension("extensions", "pgcrypto")
-                .HasPostgresExtension("extensions", "pgjwt")
-                .HasPostgresExtension("extensions", "uuid-ossp")
-                .HasPostgresExtension("graphql", "pg_graphql")
-                .HasPostgresExtension("pgsodium", "pgsodium")
-                .HasPostgresExtension("vault", "supabase_vault");
+            //modelBuilder
+            //    .HasPostgresEnum("auth", "aal_level", new[] { "aal1", "aal2", "aal3" })
+            //    .HasPostgresEnum("auth", "code_challenge_method", new[] { "s256", "plain" })
+            //    .HasPostgresEnum("auth", "factor_status", new[] { "unverified", "verified" })
+            //    .HasPostgresEnum("auth", "factor_type", new[] { "totp", "webauthn" })
+            //    .HasPostgresEnum("auth", "one_time_token_type", new[] { "confirmation_token", "reauthentication_token", "recovery_token", "email_change_token_new", "email_change_token_current", "phone_change_token" })
+            //    .HasPostgresEnum("pgsodium", "key_status", new[] { "default", "valid", "invalid", "expired" })
+            //    .HasPostgresEnum("pgsodium", "key_type", new[] { "aead-ietf", "aead-det", "hmacsha512", "hmacsha256", "auth", "shorthash", "generichash", "kdf", "secretbox", "secretstream", "stream_xchacha20" })
+            //    .HasPostgresExtension("extensions", "pg_stat_statements")
+            //    .HasPostgresExtension("extensions", "pgcrypto")
+            //    .HasPostgresExtension("extensions", "pgjwt")
+            //    .HasPostgresExtension("extensions", "uuid-ossp")
+            //    .HasPostgresExtension("graphql", "pg_graphql")
+            //    .HasPostgresExtension("pgsodium", "pgsodium")
+            //    .HasPostgresExtension("vault", "supabase_vault");
 
             modelBuilder.Entity<Admin>(entity =>
             {
