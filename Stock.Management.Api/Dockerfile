@@ -12,15 +12,15 @@ USER appuser
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG configuration=Release
 WORKDIR /src
-COPY ["Stock.Management.Api/Stock.Management.Api.csproj", "Stock.Management.Api/"]
+COPY ["./Stock.Management.Api.csproj", "Stock.Management.Api/"]
 RUN dotnet restore "./Stock.Management.Api.csproj"
 COPY . .
 WORKDIR "/src/Stock.Management.Api"
-RUN dotnet build "Stock.Management.Api.csproj" -c $configuration -o /app/build
+RUN dotnet build "./Stock.Management.Api.csproj" -c $configuration -o /app/build
 
 FROM build AS publish
 ARG configuration=Release
-RUN dotnet publish "Stock.Management.Api.csproj" -c $configuration -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Stock.Management.Api.csproj" -c $configuration -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
