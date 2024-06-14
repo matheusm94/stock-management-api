@@ -20,4 +20,4 @@ RUN dotnet publish "./Stock.Management.Api.csproj" -c $BUILD_CONFIGURATION -o /a
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Stock.Management.Api.dll"]
+ENTRYPOINT ["dotnet", "Stock.Management.Api.sln"]
