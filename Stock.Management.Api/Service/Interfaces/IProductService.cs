@@ -5,5 +5,8 @@ namespace Stock.Management.Api.Service.Interfaces;
 
 public interface IProductService
 {
-    Task<ServiceResult<IEnumerable<ProductModel>>> GetProductsAsync();
+    Task<ServiceResult<IEnumerable<ProductGetModel>>> GetProductsAsync();
+    Task<ServiceResult<ProductGetModel>> GetProductByIdAsync(int Id);
+    Task<ServiceResult<bool>> CreateProductAsync(ProductModel productModel);
+    Task<ServiceResult<bool>> UpdateProductAsync(ProductGetModel productModel);
 }

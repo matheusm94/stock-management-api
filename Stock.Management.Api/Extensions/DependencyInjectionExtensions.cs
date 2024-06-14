@@ -16,6 +16,7 @@ namespace Stock.Management.Api.Extensions
 
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductService, ProductService>();
+           // services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;
         }
