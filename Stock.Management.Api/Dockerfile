@@ -1,22 +1,19 @@
-#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
+# https://hub.docker.com/_/microsoft-dotnet
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /source
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+# copy csproj and restore as distinct layers
+COPY *.sln .
+COPY aspnetapp/*.csproj ./aspnetapp/
+RUN dotnet restore
+
+# copy everything else and build app
+COPY aspnetapp/. ./aspnetapp/
+WORKDIR /source/aspnetapp
+RUN dotnet publish -c release -o /app --no-restore
+
+# final stage/image
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
-
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
-WORKDIR /src
-COPY ["Stock.Management.Api.csproj", "."]
-RUN dotnet restore "./Stock.Management.Api.csproj"
-COPY . .
-WORKDIR "/src/."
-RUN dotnet build "Stock.Management.Api" -c Release -o /app/build
-
-FROM build AS publish
-RUN dotnet publish "Stock.Management.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
-
-FROM base AS final
-WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build /app ./
 ENTRYPOINT ["dotnet", "Stock.Management.Api.dll"]
