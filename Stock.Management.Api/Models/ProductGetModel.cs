@@ -1,14 +1,11 @@
-﻿namespace Stock.Management.Api.Database.Entities;
+﻿namespace Stock.Management.Api.Models;
 
-public partial class Product
+public class ProductGetModel
 {
     public int Productid { get; set; }
-
     public string Name { get; set; } = null!;
 
     public DateTime Maturitydate { get; set; }
 
     public decimal Price { get; set; }
-
-    public virtual ICollection<Customerinvestment> Customerinvestments { get; set; } = [];
 }
