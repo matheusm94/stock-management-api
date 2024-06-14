@@ -2,7 +2,7 @@ using Stock.Management.Api.Configuration;
 using Stock.Management.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.WebHost.UseKestrelHttpsConfiguration();
 // Add services to the container.
 
 builder.Services.AddControllers();
