@@ -7,7 +7,6 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY *.sln .
 COPY ["Stock.Management.Api.csproj", "."]
 RUN dotnet restore "./Stock.Management.Api.csproj"
 COPY . .
