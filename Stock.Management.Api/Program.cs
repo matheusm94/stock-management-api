@@ -17,8 +17,8 @@ builder.Services.ResolveDependecies(builder.Configuration);
 
 var app = builder.Build();
 
-if (!app.Environment.IsEnvironment("producao"))
-{
+//if (!app.Environment.IsEnvironment("producao"))
+//{
     app.UseSwagger(c =>
     {
         c.SerializeAsV2 = true;
@@ -35,14 +35,18 @@ if (!app.Environment.IsEnvironment("producao"))
     });
 
 
-}
+//}
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+//}
+
+app.UseCors("AllowAll");
+
+app.UseRouting();
 
 app.UseHttpsRedirection();
 

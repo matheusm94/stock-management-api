@@ -59,7 +59,7 @@ public class ProductRepository(DbStockContext context) : IProductRepository
         //product.Price = productModel.Price;
         //
         _context.Entry(product).State = EntityState.Modified;
-        _context.SaveChanges();
+       // _context.SaveChanges();
     }
 
     public async Task<Product> GetProductAsync(int id) => await _context.Products
