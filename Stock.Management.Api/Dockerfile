@@ -1,22 +1,22 @@
-# Use the official SDK image como base para compilar o aplicativo
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
+
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copie csproj e restaurar dependências
+# Copy the .csproj file and restore dependencies
 COPY *.csproj ./
 RUN dotnet restore
 
-# Copie todo o código-fonte e build do aplicativo
+# Copy the rest of the application code
 COPY . ./
+
+# Build the application
 RUN dotnet publish -c Release -o out
 
-# Build da imagem de runtime
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+# Create the final runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
-COPY --from=build /app/out ./
+COPY --from=build-env /app/out .
 
-# Expor a porta utilizada pelo aplicativo
-EXPOSE 80
-
-# Comando de entrada para iniciar o aplicativo
+# Set the entry point for the container
 ENTRYPOINT ["dotnet", "Stock.Management.Api.dll"]
