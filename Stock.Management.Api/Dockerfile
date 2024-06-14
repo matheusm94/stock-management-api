@@ -1,27 +1,25 @@
-FROM mcr.microsoft.com/dotnet/runtime-deps:8.0-alpine
+#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-ENV COMPlus_EnableDiagnostics=0
-
-ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false \
-    LC_ALL=pt_BR.UTF-8 \
-    LANG=pt_BR.UTF-8
-
-ENV ASPNETCORE_URLS http://+:5000
-
-EXPOSE 5000
-
-RUN apk add --no-cache icu-libs icu-data-full tzdata
-
-RUN addgroup -g 2000 dotnet && \
-    adduser -G dotnet -u 1000 dotnet -D \
-  --disabled-password \
-  --home /app \
-  --gecos '' dotnet && chown -R dotnet /app
-
-RUN chown dotnet:dotnet /app /tmp
-USER dotnet
-
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+USER app
 WORKDIR /app
-COPY dist .
+EXPOSE 8080
+EXPOSE 8081
 
-ENTRYPOINT ["./Stock.Management"]
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+COPY ["Stock.Management.Api.csproj", "."]
+RUN dotnet restore "./Stock.Management.Api.csproj"
+COPY . .
+WORKDIR "/src/."
+RUN dotnet build "./Stock.Management.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "./Stock.Management.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "Stock.Management.Api.dll"]
