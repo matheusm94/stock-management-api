@@ -1,9 +1,12 @@
 ﻿using Stock.Management.Api.Models;
-using Stock.Management.Api.Utils;
 
 namespace Stock.Management.Api.Repository.Interfaces;
 
 public interface IProductRepository
 {
-    Task<IEnumerable<ProductModel>> GetProductsAsync();
+    Task<IEnumerable<ProductGetModel>> GetProductsAsync();
+    Task<ProductGetModel> GetProductByIdAsync(int Id);
+    Task CreateProductAsync(ProductModel productModel);
+    //Task UpdateProduct(ProductGetModel productModel);
+    public void UpdateProduct(ProductGetModel productModel);
 }
