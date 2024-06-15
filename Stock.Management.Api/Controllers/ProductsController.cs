@@ -94,25 +94,4 @@ public class ProductsController(IProductService productService) : MainController
 
         return CustomResponse(serviceResult, productDto);
     }
-
-    /// <param name="productDto">
-    /// Dados do produto.
-    /// </param>
-    /// <param name="productId">
-    /// </param>
-    [HttpPost("Products/Update")]
-    [Produces(MediaTypeNames.Application.Json)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async ValueTask<ActionResult> PutAsync(int productId, [FromBody] ProductDto productDto)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest();
-
-        var serviceResult = await _productService.UpdateProductAsync(productId, productDto);
-
-        return CustomResponse(serviceResult, productDto);
-    }
 }
