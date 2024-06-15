@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Stock.Management.Api.Database;
 using Stock.Management.Api.Repository;
 using Stock.Management.Api.Repository.Interfaces;
@@ -16,6 +17,9 @@ namespace Stock.Management.Api.Extensions
 
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<ICustomerInvestmentRepository, CustomerInvestmentRepository>();
+            services.AddScoped<ICustomerInvestmentService, CustomerInvestmentService>();
+            services.AddScoped<IMapper, Mapper>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;

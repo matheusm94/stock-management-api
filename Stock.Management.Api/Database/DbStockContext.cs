@@ -21,21 +21,6 @@ namespace Stock.Management.Api.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder
-            //    .HasPostgresEnum("auth", "aal_level", new[] { "aal1", "aal2", "aal3" })
-            //    .HasPostgresEnum("auth", "code_challenge_method", new[] { "s256", "plain" })
-            //    .HasPostgresEnum("auth", "factor_status", new[] { "unverified", "verified" })
-            //    .HasPostgresEnum("auth", "factor_type", new[] { "totp", "webauthn" })
-            //    .HasPostgresEnum("auth", "one_time_token_type", new[] { "confirmation_token", "reauthentication_token", "recovery_token", "email_change_token_new", "email_change_token_current", "phone_change_token" })
-            //    .HasPostgresEnum("pgsodium", "key_status", new[] { "default", "valid", "invalid", "expired" })
-            //    .HasPostgresEnum("pgsodium", "key_type", new[] { "aead-ietf", "aead-det", "hmacsha512", "hmacsha256", "auth", "shorthash", "generichash", "kdf", "secretbox", "secretstream", "stream_xchacha20" })
-            //    .HasPostgresExtension("extensions", "pg_stat_statements")
-            //    .HasPostgresExtension("extensions", "pgcrypto")
-            //    .HasPostgresExtension("extensions", "pgjwt")
-            //    .HasPostgresExtension("extensions", "uuid-ossp")
-            //    .HasPostgresExtension("graphql", "pg_graphql")
-            //    .HasPostgresExtension("pgsodium", "pgsodium")
-            //    .HasPostgresExtension("vault", "supabase_vault");
 
             modelBuilder.Entity<Admin>(entity =>
             {
@@ -77,6 +62,9 @@ namespace Stock.Management.Api.Database
                 entity.Property(e => e.Amount)
                     .HasPrecision(18, 2)
                     .HasColumnName("amount");
+                entity.Property(e => e.investmentValue)
+                .HasPrecision(18, 2)
+                .HasColumnName("investmentvalue");
                 entity.Property(e => e.Customerid).HasColumnName("customerid");
                 entity.Property(e => e.Productid).HasColumnName("productid");
                 entity.Property(e => e.Purchasedate).HasColumnName("purchasedate");

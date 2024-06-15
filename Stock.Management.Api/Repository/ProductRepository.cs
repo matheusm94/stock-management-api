@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Stock.Management.Api.Database;
 using Stock.Management.Api.Database.Entities;
-using Stock.Management.Api.Models;
+using Stock.Management.Api.DTOs;
 using Stock.Management.Api.Repository.Interfaces;
 
 namespace Stock.Management.Api.Repository;
@@ -10,25 +10,25 @@ public class ProductRepository(DbStockContext context) : IProductRepository
 {
     private readonly DbStockContext _context = context;
 
-    public async Task<IEnumerable<ProductGetModel>> GetProductsAsync()
+    public async Task<IEnumerable<ProductGetDto>> GetProductsAsync()
     {
         return await (from p in _context.Products
-                      select new ProductGetModel
+                      select new ProductGetDto
                       {
-                          Productid = p.Productid,
+                          ProductId = p.Productid,
                           Price = p.Price,
                           Name = p.Name,
                           Maturitydate = p.Maturitydate
                       }).ToListAsync().ConfigureAwait(false);
     }
 
-    public async Task<ProductGetModel> GetProductByIdAsync(int Id)
+    public async Task<ProductGetDto> GetProductByIdAsync(int productId)
     {
         var products = await (from p in _context.Products
-                              where p.Productid == Id
-                              select new ProductGetModel
+                              where p.Productid == productId
+                              select new ProductGetDto
                               {
-                                  Productid = p.Productid,
+                                  ProductId = p.Productid,
                                   Price = p.Price,
                                   Name = p.Name,
                                   Maturitydate = p.Maturitydate
@@ -37,31 +37,17 @@ public class ProductRepository(DbStockContext context) : IProductRepository
         return products;
     }
 
-    public async Task CreateProductAsync(ProductModel productModel)
+    public async Task CreateProductAsync(Product product)
     {
-        Product product = new()
-        {
-            Name = productModel.Name,
-            Maturitydate = productModel.Maturitydate,
-            Price = productModel.Price,
-        };
         await _context.AddAsync(product);
-
-        await _context.SaveChangesAsync();
     }
 
-    public void UpdateProduct(Product product)
+    public async Task UpdateProduct(ProductDto productParameter, int productId)
     {
-        //var product = GetProductAsync(productModel.Productid).Result; 
+        var product = await _context.Products.Where(p => p.Productid == productId).FirstOrDefaultAsync();
 
-        //product.Name = productModel.Name;
-        //product.Maturitydate = productModel.Maturitydate;
-        //product.Price = productModel.Price;
-        //
-        _context.Entry(product).State = EntityState.Modified;
-       // _context.SaveChanges();
+        product.Name = productParameter.Name;
+        product.Maturitydate = productParameter.Maturitydate;
+        product.Price = productParameter.Price;
     }
-
-    public async Task<Product> GetProductAsync(int id) => await _context.Products
-        .Where(p => p.Productid == id).FirstOrDefaultAsync().ConfigureAwait(false);
 }

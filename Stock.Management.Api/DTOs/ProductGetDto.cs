@@ -1,11 +1,11 @@
-﻿namespace Stock.Management.Api.Models;
+﻿namespace Stock.Management.Api.DTOs;
 
-public class ProductGetModel
+public class ProductGetDto
 {
-    public int Productid { get; set; }
+    public int ProductId { get; set; }
     public string Name { get; set; } = null!;
 
     public DateTime Maturitydate { get; set; }
-
+ 
     public decimal Price { get; set; }
 }

@@ -23,6 +23,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSwaggerConfig();
 builder.Configuration.AddJsonFile($"appsettings.json", false, false);
 builder.Services.AddSingleton(builder.Configuration);
+builder.Services.AddMappings();
 
 builder.Services.ResolveDependecies(builder.Configuration);
 
@@ -65,4 +66,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();

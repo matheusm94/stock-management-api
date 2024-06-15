@@ -1,82 +1,51 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Stock.Management.Api.DTOs;
+using Stock.Management.Api.Service.Interfaces;
+using Stock.Management.Api.Utils;
+using System.Net.Mime;
 
 namespace Stock.Management.Api.Controllers
 {
-    public class CustomerInvestmentController : Controller
+    public class CustomerInvestmentController(ICustomerInvestmentService customerInvestmentService) : MainController
     {
-        // GET: CustomerInvestmentController
-        public ActionResult Index()
+        private readonly ICustomerInvestmentService _customerInvestmentService = customerInvestmentService;
+
+        [HttpPost("CustomerInvestment/Post")]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async ValueTask<ActionResult> PostAsync([FromBody] CustomerInvestmentDto productDto)
         {
-            return View();
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var serviceResult = await _customerInvestmentService.CreateCustomerInvestmentAsync(productDto);
+
+            return CustomResponse(serviceResult, productDto);
         }
 
-        // GET: CustomerInvestmentController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
 
-        // GET: CustomerInvestmentController/Create
-        public ActionResult Create()
+        /// <summary>
+        /// Busca os investimentos de um usuário. 
+        /// </summary>
+        [HttpGet("CustomerInvestment/Get/id")]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(ServiceResult<CustomerInvestmentGetDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async ValueTask<ActionResult> GetByAsync(int customerId)
         {
-            return View();
-        }
+            if (!ModelState.IsValid)
+                return BadRequest();
 
-        // POST: CustomerInvestmentController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+            var serviceResult = await _customerInvestmentService.GetInvestmentByCustomerIdAsync(customerId);
+            if (serviceResult.Success)
+                return Ok(serviceResult.Result);
 
-        // GET: CustomerInvestmentController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: CustomerInvestmentController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: CustomerInvestmentController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: CustomerInvestmentController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return BadRequest(serviceResult.Result);
         }
     }
 }

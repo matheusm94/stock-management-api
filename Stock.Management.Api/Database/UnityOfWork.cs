@@ -1,27 +1,20 @@
 ﻿namespace Stock.Management.Api.Database;
 
-public interface IUnitOfWork
+
+public interface IUnitOfWork : IDisposable
 {
     Task CommitAsync();
-    void Dispose();
 }
 
-public class UnitOfWork : IUnitOfWork
+public class UnitOfWork(DbStockContext context) : IUnitOfWork
 {
-    private readonly DbStockContext _context;
+    private readonly DbStockContext _context = context;
 
-    public UnitOfWork(DbStockContext context)
-    {
-        _context = context;
-    }
+    public async Task CommitAsync() => await _context.SaveChangesAsync();
 
-    public async Task CommitAsync()
-    {
-        await _context.SaveChangesAsync();
-    }
-
-    public void Dispose()
+    void IDisposable.Dispose()
     {
         _context.Dispose();
+        GC.SuppressFinalize(this);
     }
 }
